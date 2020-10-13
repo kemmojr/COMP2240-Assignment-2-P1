@@ -1,26 +1,41 @@
 import java.util.concurrent.Semaphore;
 
-public class farmerThread extends Thread{
+public class FarmerThread extends Thread{
 
     private String name;//farmer ID
-    private boolean northbound, crossing = false, crossed;//boolean variables to denote direction the farmer is going, if they are currently crossing and if they have crossed (finished running)
-    private int bridgeLen = 20, stepLen = 5, steps = 0;
-    private static Semaphore crossingpass;
+    private boolean northbound, crossing, crossed;//boolean variables to denote direction the farmer is going, if they are currently crossing and if they have crossed (finished running)
+    private static Semaphore crossingPass;
     private static int neon;
+    private static Bridge bridge;
 
-    public farmerThread(String n, boolean goingNorth, Semaphore s, int nSign){
+
+    public FarmerThread(String n, boolean goingNorth, Semaphore s, int nSign, Bridge b){
         name = n;
         northbound = goingNorth;
-        crossingpass = s;
-        crossed = false;
+        crossingPass = s;
+        neon = nSign;
+        bridge = b;
+        if (northbound)
+            System.out.println(name + ": Waiting for bridge. Going towards North");
+        else
+            System.out.println(name + ": Waiting for bridge. Going towards South");
+    }
+
+    public FarmerThread(FarmerThread f){
+        this.name = f.name;
+        this.northbound = !f.northbound;
+        this.crossingPass = f.crossingPass;
+        this.neon = f.neon;
+        this.bridge = f.bridge;
+
     }
 
     public String getFName(){
         return name;
     }
 
-    public boolean hasCrossed(){
-        return crossed;
+    public void changeDirection(){
+        northbound = !northbound;
     }
 
     public boolean isNorthbound(){
@@ -28,35 +43,29 @@ public class farmerThread extends Thread{
     }
 
 
+    @Override
     public void run(){
         //Runs the thread to cross the bridge
         //Code to check if the bridge is available to cross and step 20 steps 5 steps at a time
         try {
-            boolean cont = true;
 
-            while (cont){
-                if (crossingpass.availablePermits()>0||crossing){
-                    if (northbound)
-                        System.out.println(name + ": Waiting for bridge. Going towards North");
-                    else
-                        System.out.println(name + ": Waiting for bridge. Going towards South");
-                    crossingpass.acquire();
-                    crossing = true;
-                    for (int i = 0; i < bridgeLen-5; i+=stepLen) {
-                        steps += stepLen;
-                        System.out.println(name + ": Crossing bridge Step " + steps + ".");
-                        Thread.sleep(200);
-                    }
-                    System.out.println(name + ": Across the bridge.");
-                    neon++;
-                    System.out.println("NEON = "+ neon);
-                    northbound = !northbound;//Switch the direction the farmer is heading
-                    crossing = false;
-                    crossingpass.release();
-                    cont = false;
-                }
+            boolean cont = true;
+            int steps = 0;
+            crossing = true;
+
+
+            for (int i = 0; i < 3; i++) {
+                steps += 5;
+                System.out.println(name + ": Crossing bridge Step " + steps + ".");
+                Thread.sleep(200);
             }
-            crossed = true;
+            System.out.println(name + ": Across the bridge.");
+            neon++;
+            System.out.println("NEON = " + neon);
+            crossingPass.release();
+            cont = false;
+
+
 
         } catch (Exception e){
             System.out.println("error");
