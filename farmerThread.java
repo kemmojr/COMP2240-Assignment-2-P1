@@ -6,8 +6,9 @@ public class farmerThread extends Thread{
     private boolean northbound, crossing = false, crossed;//boolean variables to denote direction the farmer is going, if they are currently crossing and if they have crossed (finished running)
     private int bridgeLen = 20, stepLen = 5, steps = 0;
     private static Semaphore crossingpass;
+    private static int neon;
 
-    public farmerThread(String n, boolean goingNorth, Semaphore s){
+    public farmerThread(String n, boolean goingNorth, Semaphore s, int nSign){
         name = n;
         northbound = goingNorth;
         crossingpass = s;
@@ -47,6 +48,8 @@ public class farmerThread extends Thread{
                         Thread.sleep(200);
                     }
                     System.out.println(name + ": Across the bridge.");
+                    neon++;
+                    System.out.println("NEON = "+ neon);
                     northbound = !northbound;//Switch the direction the farmer is heading
                     crossing = false;
                     crossingpass.release();

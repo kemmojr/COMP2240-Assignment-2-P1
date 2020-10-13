@@ -10,11 +10,20 @@ import java.util.concurrent.Semaphore;
 
 public class P1 {
 
+    public static boolean allTrue(boolean[] farmersCrossed){
+        for (boolean b:farmersCrossed) {
+            if (!b)
+                return false;
+        }
+        return true;
+    }
+
     public static void main(String args[]) throws InterruptedException {//look into parallel
         Semaphore numOfPasses = new Semaphore(1);//A semaphore used to keep track of how if the bridge is in use
         //numOfPasses.release();//increments +1 to permits counter
         //numOfPasses.acquire();//decrements -1 to permits counter
-        int neon = 0, count = 0, S_Farmers = 0, N_Farmers = 0;
+        int count = 0, S_Farmers = 0, N_Farmers = 0;
+        int neon = 0;
         boolean allCrossed = false;
         String in;
         String[] input1, input2;
@@ -36,44 +45,44 @@ public class P1 {
         Thread t3 = new Thread(new tLogic("S_Farmer"+1, true, numOfPasses));
         Thread t4 = new Thread(new tLogic("S_Farmer"+2, true, numOfPasses));*/
 
-        farmerThread t1 = new farmerThread("N_Farmer"+1, false, numOfPasses);
-        farmerThread t2 = new farmerThread("N_Farmer"+2, false, numOfPasses);
-        farmerThread t3 = new farmerThread("S_Farmer"+1, true, numOfPasses);
-        farmerThread t4 = new farmerThread("S_Farmer"+2, true, numOfPasses);
+        farmerThread t1 = new farmerThread("N_Farmer"+1, false, numOfPasses, neon);
+        farmerThread t2 = new farmerThread("N_Farmer"+2, false, numOfPasses, neon);
+        farmerThread t3 = new farmerThread("S_Farmer"+1, true, numOfPasses, neon);
+        farmerThread t4 = new farmerThread("S_Farmer"+2, true, numOfPasses, neon);
 
         t1.start();
         t2.start();
         t3.start();
         t4.start();
 
-        /*t1.join();
+        t1.join();
         t2.join();
         t3.join();
-        t4.join();*/
+        t4.join();
 
         while (true){
-            if (threadsCrossed[0]){
+            if (allTrue(threadsCrossed) || (threadsCrossed[0]&&threadsCrossed[1]&&threadsCrossed[2]&&threadsCrossed[3])){
                 System.out.println("All farmers have crossed");
                 break;
             } else if (t1.hasCrossed() && !threadsCrossed[0]){
                 neon++;
                 threadsCrossed[0] = true;
-                System.out.println("N_Farmer1 has crossed\nNEON = " + neon);
+
 
             } else if (t2.hasCrossed() && !threadsCrossed[1]){
                 neon++;
                 threadsCrossed[1] = true;
-                System.out.println("N_Farmer2 has crossed\nNEON = " + neon);
+
 
             } else if (t3.hasCrossed() && !threadsCrossed[2]){
                 neon++;
                 threadsCrossed[2] = true;
-                System.out.println("S_Farmer1 has crossed\nNEON = " + neon);
+
 
             }else if (t4.hasCrossed() && !threadsCrossed[3]){
                 neon++;
                 threadsCrossed[3] = true;
-                System.out.println("S_Farmer2 has crossed\nNEON = " + neon);
+
 
             }
         }
