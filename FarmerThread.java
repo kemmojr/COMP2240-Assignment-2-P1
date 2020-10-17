@@ -40,7 +40,7 @@ public class FarmerThread extends Thread{//Custom thread class for the farmers
     public void run(){
         //Runs the thread to cross the bridge by stepping 20 steps 5 steps at a time
         try {
-
+            //crossingPass.acquire();
             int steps = 0;
             for (int i = 0; i < (bridgeLen/stepLen)-1; i++) {//For loop that steps across the bridge 5 steps at a time with a 200 Millisecond wait between each step
                 steps += stepLen;
@@ -51,7 +51,8 @@ public class FarmerThread extends Thread{//Custom thread class for the farmers
             neon++;
             System.out.println("NEON = " + neon);//update the neon sign once crossed
             crossingPass.release();//Release the semaphore token once crossed
-
+            /*changeDirection();
+            run();*/
         } catch (Exception e){
             System.out.println("error");
         }

@@ -32,10 +32,12 @@ public class P1 {
 
         for (int i = 1; i < numN_Farmers+1; i++) {
             N_Farmers[i-1] = new FarmerThread("N_Farmer"+i, false, numOfPasses, neon);//Initialising all the north farmer threads
+            //N_Farmers[i-1].start();
         }
 
         for (int i = 1; i < numS_Farmers+1; i++) {
             S_Farmers[i-1] = new FarmerThread("S_Farmer"+i, true, numOfPasses, neon);//Initialising all the south farmer threads
+            //S_Farmers[i-1].start();
         }
 
         while (true){//While loop to constantly cross the farmers back and forth

@@ -14,6 +14,8 @@ public class Bridge {
         crossingPass = s;
     }
 
+
+
     public void cross(FarmerThread f){//to initiate the thread crossing the bridge
 
         try {
