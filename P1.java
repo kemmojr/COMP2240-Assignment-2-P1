@@ -12,7 +12,7 @@ import java.util.concurrent.Semaphore;
 public class P1 {
 
     public static void main(String args[]){//Main loop that initialises all the farmer threads and constantly crosses them over the bridge
-        Semaphore numOfPasses = new Semaphore(1);//A semaphore used to keep track of how if the bridge is in use
+        Semaphore numOfPasses = new Semaphore(1, true);//A semaphore used to keep track of how and if the bridge is in use
         int neon = 0, numS_Farmers = 0, numN_Farmers = 0;
         try {
             Scanner reader = new Scanner(new FileInputStream(args[0]));
@@ -31,25 +31,12 @@ public class P1 {
 
         for (int i = 1; i < numN_Farmers+1; i++) {
             N_Farmers[i-1] = new FarmerThread("N_Farmer"+i, false, numOfPasses, neon);//Initialising all the north farmer threads
-            //N_Farmers[i-1].start();
         }
 
         for (int i = 1; i < numS_Farmers+1; i++) {
             S_Farmers[i-1] = new FarmerThread("S_Farmer"+i, true, numOfPasses, neon);//Initialising all the south farmer threads
-            //S_Farmers[i-1].start();
         }
 
-        //NZBridge.check(N_Farmers,S_Farmers);
-        while (FarmerThread.neon<=100){//While loop to constantly cross the farmers back and forth which stops after 100 for Dan's sanity
-            for (int i = 0; i < numN_Farmers; i++) {
-                NZBridge.cross(N_Farmers[i]);//Constantly crosses the north farmer threads
-                N_Farmers[i].changeDirection();//Changes the direction the farmers are going
-            }
-
-            for (int i = 0; i < numS_Farmers; i++) {
-                NZBridge.cross(S_Farmers[i]);//Constantly crosses the south farmer threads
-                S_Farmers[i].changeDirection();//Changes the direction the farmers are going
-            }
-        }
+        NZBridge.check(N_Farmers,S_Farmers);//Starts all the threads running which will continue indefinitely
     }
 }

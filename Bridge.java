@@ -15,23 +15,21 @@ public class Bridge {//Bridge class used for continually crossing the farmer
         crossingPass = s;
     }
 
+    //A method that starts all the threads
     public void check(FarmerThread[] N_Farmers, FarmerThread[] S_Farmers){
-        for (FarmerThread f: N_Farmers){
-            f.start();
-        }
-        for (FarmerThread f: S_Farmers){
-            f.start();
-        }
-    }
 
-    public void cross(FarmerThread f){//Initiates the thread crossing the bridge by acquiring the semaphore and running the thread
-        try {
-            crossingPass.acquire();//Semaphore acquiring.
-            // As only one Semaphore can be in use at any one time it will utilise the inbuilt queue of the Semaphore to execute the Thread run in a FCFS manner
-            f.run();
+        int numN = N_Farmers.length, numS = S_Farmers.length, count = 0;
 
-        } catch (Exception e){
-            System.out.println("Cross failed");
+        while (count<=numN||count<=numS){//While loop that starts all the threads, alternating between starting north and south farmers
+            if (count<numN){
+                N_Farmers[count].start();
+            }
+            if (count<numS){
+                S_Farmers[count].start();
+            }
+
+            count++;
         }
+
     }
 }
