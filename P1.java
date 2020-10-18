@@ -11,17 +11,16 @@ import java.util.concurrent.Semaphore;
 
 public class P1 {
 
-    public static void main(String args[]) throws InterruptedException {//Main loop that initialises all the farmer threads and constantly crosses them over the bridge
+    public static void main(String args[]){//Main loop that initialises all the farmer threads and constantly crosses them over the bridge
         Semaphore numOfPasses = new Semaphore(1);//A semaphore used to keep track of how if the bridge is in use
-        int neon = 0, count = 0, numS_Farmers = 0, numN_Farmers = 0;
-        String in;
-        String[] input1, input2;
+        int neon = 0, numS_Farmers = 0, numN_Farmers = 0;
         try {
             Scanner reader = new Scanner(new FileInputStream(args[0]));
             //Getting the input from a file for how many north and south farmers there are
-            numN_Farmers = Integer.parseInt(reader.next().split("=")[1].split("")[0]);
-            numS_Farmers = Integer.parseInt(reader.next().split("=")[1].split("")[0]);
+            numN_Farmers = Integer.parseInt(reader.next().split("=")[1].split("")[0]);//String manipulation to get the numbers correlating to the number of farmers
+            numS_Farmers = Integer.parseInt(reader.next().split("=")[1].split("")[0]);//I have assumed there are no mistakes in the input formatting
         } catch (Exception e){
+            System.out.println("Exception: " + e);
             System.out.println("Error reading file. Exiting ...");
             return;
         }
@@ -40,7 +39,8 @@ public class P1 {
             //S_Farmers[i-1].start();
         }
 
-        while (true){//While loop to constantly cross the farmers back and forth
+        //NZBridge.check(N_Farmers,S_Farmers);
+        while (FarmerThread.neon<=100){//While loop to constantly cross the farmers back and forth which stops after 100 for Dan's sanity
             for (int i = 0; i < numN_Farmers; i++) {
                 NZBridge.cross(N_Farmers[i]);//Constantly crosses the north farmer threads
                 N_Farmers[i].changeDirection();//Changes the direction the farmers are going

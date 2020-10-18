@@ -12,12 +12,11 @@ public class FarmerThread extends Thread{//Custom thread class for the farmers
     private String name;//farmer ID
     private boolean northbound;//boolean variables to denote direction the farmer is going, if they are currently crossing and if they have crossed (finished running)
     private static Semaphore crossingPass;//The semaphore which controls access to the bridge
-    private static int neon;//counter for how many farmers have crossed the bridge
-    private int bridgeLen = 20, stepLen = 5;
+    public static int neon;//counter for how many farmers have crossed the bridge
+    private int bridgeLen = 20, stepLen = 5;//The length of the bridge and the amount of steps a farmer takes at a time
 
-
-    public FarmerThread(String n, boolean goingNorth, Semaphore s, int nSign){//Constructor that sets the name and direction of the FarmerThread
-        //Also sets the shared values of the Semaphore and neon sign
+    //Constructor that sets the name and direction of the farmer, neon sign and the shared Semaphore
+    public FarmerThread(String n, boolean goingNorth, Semaphore s, int nSign){
         name = n;
         northbound = goingNorth;
         crossingPass = s;
@@ -28,7 +27,8 @@ public class FarmerThread extends Thread{//Custom thread class for the farmers
             System.out.println(name + ": Waiting for bridge. Going towards South");
     }
 
-    public void changeDirection(){//Changes the direction the farmer is going
+    //Changes the direction the farmer is going and prints the new direction they are waiting to cross
+    public void changeDirection(){
         northbound = !northbound;
         if (northbound)//Outputs the new direction that the farmer is waiting to go
             System.out.println(name + ": Waiting for bridge. Going towards North");
@@ -36,9 +36,8 @@ public class FarmerThread extends Thread{//Custom thread class for the farmers
             System.out.println(name + ": Waiting for bridge. Going towards South");
     }
 
-    @Override
+    @Override//Runs the thread to cross the bridge by stepping 20 steps 5 steps at a time
     public void run(){
-        //Runs the thread to cross the bridge by stepping 20 steps 5 steps at a time
         try {
             //crossingPass.acquire();
             int steps = 0;
